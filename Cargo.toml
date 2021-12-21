@@ -1,17 +1,8 @@
-[package]
-name = "jones"
-version = "0.1.4"
-authors = ["Vlad Nedelcu <vlad.nedelcu@evozon.com>"]
-license = "MIT"
-edition = "2018"
-description = "CLI project for searching and inspecting Python classes"
-readme = "README.md"
-keywords = ["cli", "search", "inspector", "finder", "python-doc"]
-categories = ["command-line-utilities"]
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-regex = "1.5.4"
-ansi_term = "0.12.1"
-structopt = "0.3.13"
+members = [
+    'src/extractors',
+    'src/helpers',
+    'src/navigation',
+    'src/cli'
+]

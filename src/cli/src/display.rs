@@ -1,17 +1,9 @@
-/*
-JonesCLI
-
-Author: Vlad Nedelcu
-Date: Jul 2021
-License: MIT
-
-Copyright 2021 Vlad Nedelcu
-*/
-use super::objects;
-use super::ClassMatch;
 use ansi_term::Colour;
+use extractors::PythonClass;
 
-pub fn output_class(python_class: &objects::PythonClass) {
+type ClassMatch = (String, String);
+
+pub fn output_class(python_class: &PythonClass) {
     println!("{}", python_class);
 
     for method in python_class.methods.iter() {

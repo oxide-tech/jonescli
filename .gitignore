@@ -1,2 +1,8 @@
+
+# Rust
+Cargo.lock
 /target
+/src/cli/target
+
+# Python
 *.py

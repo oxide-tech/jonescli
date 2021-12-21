@@ -1,31 +1,19 @@
-/*
-JonesCLI
-
-Author: Vlad Nedelcu
-Date: Jul 2021
-License: MIT
-
-Copyright 2021 Vlad Nedelcu
-*/
-
-use super::utils;
 use std::fmt;
 use ansi_term::Colour;
 
+/// Parameter of a python method
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Parameter{
+
+    /// The name of the parameter
     pub name: String,
+
+    // The [optional] typing this parameter has
     pub static_type: String
 }
 impl Parameter {
-    pub fn new(name: String, static_type: String) -> Self{
-        Parameter {
-            name,
-            static_type
-        }
-    }
-
+    pub fn new(name: String, static_type: String) -> Self { Parameter { name, static_type } }
 }
 impl fmt::Display for Parameter{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -36,31 +24,24 @@ impl fmt::Display for Parameter{
     }
 }
 
+/// Representation of a python class method
+/// > NOTE: Not a @classmethod but a method found in a initialized class
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct Method{
+
+    /// Method name
     pub name: String,
+
+    /// Parameters of the method
     pub parameters: Vec<Parameter>,
+
+    /// The output type of a method
     pub output: String
 }
 impl Method {
-    pub fn new(method_header: &String) -> Self {
-        let method_name = match utils::extract_method_name(method_header) {
-            Ok(name) => name,
-            Err(err) => {
-                println!("Error while extracting method name: {}", err);
-                String::from("ENL")
-            }
-        };
-        let method_output = match utils::extract_method_output(method_header) {
-            Ok(output) => output,
-            Err(_) => String::from("None")
-        };
-        Method {
-            name: method_name,
-            output: method_output,
-            parameters: utils::extract_parameters(method_header)
-        }
+    pub fn new(name: String, parameters: Vec<Parameter>, output: String) -> Self {
+        Method { name, parameters, output }
     }
 }
 impl fmt::Display for Method{
@@ -72,6 +53,7 @@ impl fmt::Display for Method{
     }
 }
 
+/// Representation of the Python Class
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub struct PythonClass{
@@ -81,13 +63,13 @@ pub struct PythonClass{
     pub docstring: String
 }
 impl PythonClass {
-    pub fn new(class_code: Vec<String>, name: String, inheritance: Vec<String>, docstring: String) -> Self {
-        PythonClass {
-            name: name,
-            methods: utils::extract_methods(class_code),
-            inheritance,
-            docstring
-        }
+    pub fn new(
+        name: String,
+        methods: Vec<Method>,
+        inheritance: Vec<String>,
+        docstring: String
+    ) -> Self {
+        PythonClass { name, methods, inheritance, docstring }
     }
 }
 impl fmt::Display for PythonClass{
