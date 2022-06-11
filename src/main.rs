@@ -10,6 +10,7 @@ Copyright 2021 Vlad Nedelcu
 
 mod joneslib;
 mod commands;
+pub mod chapter;
 
 use structopt::StructOpt;
 use joneslib::display;
