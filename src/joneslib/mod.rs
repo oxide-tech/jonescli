@@ -17,6 +17,9 @@ pub mod docstrings;
 use std::fs;
 use std::path::PathBuf;
 
+use crate::chapter::processor::ContextProcessor;
+use crate::chapter::types::ContextType;
+
 const CLASS_TEMPLATE_INHERITANCE: &str = "class {template}(";
 const CLASS_TEMPLATE: &str = "class {template}:";
 const TEMPLATE_KEYWORD: &str = "{template}";
@@ -180,11 +183,24 @@ pub fn smart_search(dir_path: &PathBuf, class_name: &String)  -> Option<Vec<Clas
                 Ok(content) => content,
                 Err(_) => continue
             };
-            let lines: Vec<&str> = file_content.split("\n").collect();
-            match utils::grep_class(lines, &class_name, file_path_name) {
-                Some(matches) => found_matched_classes.extend(matches),
-                None => continue
+            if !file_content.contains(class_name) {
+                continue
             }
+            let lines = file_content
+                            .split("\n")
+                            .map(|line| line.to_string())
+                            .collect::<Vec<String>>();
+
+            let mut processor = ContextProcessor::load(lines);
+            let module = processor.parse_module();
+
+            for child in &module.borrow().children {
+                let ch = child.borrow();
+                if ch.context_type == ContextType::CLASS && ch.name.contains(class_name) {
+                    found_matched_classes.push((ch.name.to_string(), file_path_name.to_string()))
+                }
+            }
+
         }
     }
 
